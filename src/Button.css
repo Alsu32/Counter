@@ -1,0 +1,29 @@
+.button {
+  background-color: #61dafb;
+  height: 50px;
+  width: 150px;
+  border-radius: 10px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #282c34;
+  padding: 3px;
+}
+
+.buttonDisabled {
+  background-color: #61dafb;
+  height: 50px;
+  width: 150px;
+  border-radius: 10px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #282c34;
+  padding: 3px;
+  opacity: 40%;
+}
+
+
+
+
+
+
+

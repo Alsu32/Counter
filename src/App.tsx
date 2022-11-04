@@ -1,25 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
+import {Tablo} from "./Tablo";
+import {Button} from "./Button";
+
+
 
 function App() {
+
+  let [amount, setAmount]  = useState<number>(0)
+  let [disabled, setDisabled] = useState<boolean>(true)
+
+    const onClick  = (name:string)=> {
+      name==="inc" && amount < 5 && setAmount(amount + 1)
+      name==="reset" && setAmount(0)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="App">
+          <div className="counter">
+            <Tablo amount={amount}/>
+            <div className="setButtons">
+                <Button onClick = {onClick} nameButton={"inc"} setAmount={setAmount} value={amount} disabled={disabled}/>
+                <Button onClick = {onClick} nameButton={"reset"} setAmount={setAmount} value={amount} disabled={disabled}/>
+            </div>
+          </div>
+      </div>
   );
 }
 
