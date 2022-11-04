@@ -6,7 +6,7 @@ type ButtonPropsType = {
     nameButton:string
     setAmount:(amount:number)=>void
     value: number
-    disabled:boolean
+    disabled: boolean
 }
 
 export const Button = (props:ButtonPropsType)=> {
