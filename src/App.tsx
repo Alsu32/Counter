@@ -1,36 +1,73 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
-import {Tablo} from "./Tablo";
-import {Button} from "./Button";
+import {Button} from "./Components/Button/Button";
+import {InputField} from "./Components/Input/InputField";
 
 
 function App() {
 
-  let [amount, setAmount]  = useState<number>(0)
-
-  let [buttonIncDisabled, setButtonIncDisabled] = useState<boolean>(false)
-  let [buttonResetDisabled, setButtonResetDisabled] = useState<boolean>(true)
-
-  const onClickButton  = (name:string)=> {
-      name==="inc" && amount < 5 && setAmount(amount + 1)
-      name==="reset" && setAmount(0)
-
-      name==="inc" && amount === 5 ? setButtonIncDisabled(true) : setButtonIncDisabled(false)
-      name==="reset" && amount === 0 ? setButtonResetDisabled(true) : setButtonResetDisabled(false)
-  }
+    let [value, setValue] = useState<number>(0)
+    let [startValue, setStartValue] = useState<number>(JSON.parse(localStorage.getItem("startValue") || "0"))
+    let [maxValue, setMaxValue] = useState<number>(5)
+    let [buttonIncStatusDisabled, setbuttonIncStatusDisabled] = useState<boolean>(value === maxValue)
+    let [buttonSetStatusDisabled, setbuttonSetStatusDisabled] = useState<boolean>(true)
+    let [valueDisplay, setValueDisplay] = useState<number | string>(value)
 
 
-  return (
-      <div className="App">
-          <div className="counter">
-            <Tablo amount={amount}/>
-            <div className="setButtons">
-                <Button onClick = {onClickButton} nameButton={"inc"} setAmount={setAmount} value={amount} disabled={buttonIncDisabled}/>
-                <Button onClick = {onClickButton} nameButton={"reset"} setAmount={setAmount} value={amount} disabled={buttonResetDisabled}/>
+    useEffect(()=>{
+        localStorage.setItem("startValue", JSON.stringify(startValue) )
+    }, [startValue])
+
+    const increaseValue = () => {
+        value < maxValue && setValue(value + 1)
+    }
+    const resetValue = () => {
+         setValue(startValue)
+    }
+    const getNewMaxValue = (newMaxValue:number) => {
+        setMaxValue(newMaxValue)
+        setValueDisplay( newMaxValue < 0 ? "Incorrect value!" : "enter values and press 'set'")
+        setbuttonSetStatusDisabled(newMaxValue< 0)
+    }
+    const getNewStartValue = (newStartValue:number) => {
+        setStartValue(newStartValue)
+        setValueDisplay( newStartValue < 0 ? "Incorrect value!" : "enter values and press 'set'")
+        setbuttonSetStatusDisabled(newStartValue < 0)
+    }
+    const setNewStartValueInValue = () => {
+        setValue(startValue)
+        setbuttonSetStatusDisabled(true)
+    }
+
+    useEffect(()=>{
+        setValueDisplay(value)
+        setbuttonIncStatusDisabled(value === maxValue)
+    }, [value])
+
+
+    return (
+        <div className="App">
+            <div className="counter">
+                <div className="tablo">
+                    <InputField inputName={"max value:"}
+                                value={maxValue} onChange={getNewMaxValue}/>
+                    <InputField inputName={"start value:"}
+                                value={startValue} onChange={getNewStartValue}/>
+                </div>
+                <div className="setButtons">
+                    <Button onClick={setNewStartValueInValue} nameButton={"set"} disabled={buttonSetStatusDisabled}/>
+                </div>
             </div>
-          </div>
-      </div>
-  );
+            <div className="counter">
+                <div className={valueDisplay === "Incorrect value!" || valueDisplay === maxValue ? "error" : "tablo"}>{valueDisplay}</div>
+                <div className="setButtons">
+                    <Button onClick={increaseValue} nameButton={"inc"} disabled={buttonIncStatusDisabled}/>
+                    <Button onClick={resetValue} nameButton={"reset"} disabled={false}/>
+                </div>
+            </div>
+
+        </div>
+    );
 }
 
 export default App;

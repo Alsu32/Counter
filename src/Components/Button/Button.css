@@ -1,12 +1,13 @@
 .button {
   background-color: #61dafb;
+  position: center;
   height: 50px;
   width: 150px;
   border-radius: 10px;
   font-size: 40px;
-  font-weight: bold;
+  font-weight: 700;
   color: #282c34;
-  padding: 3px;
+  padding: 2px;
 }
 
 .buttonDisabled {

@@ -3,7 +3,8 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  background-color: #61dafb;
+  background-color: #282c34;
+  border: 3px solid #61dafb;
   height: 180px;
   width: 400px;
   border-radius: 15px;
