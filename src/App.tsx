@@ -1,71 +1,63 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import './App.css';
 import {Button} from "./Components/Button/Button";
 import {InputField} from "./Components/Input/InputField";
+import {useDispatch, useSelector} from "react-redux";
+import {
+    getNewMaxValueAC,
+    getNewStartValueAC,
+    increaseValueAC,
+    resetValueAC,
+    setNewStartValueInValueAC, StateType
+} from "./reducer";
+import {AppRootStateType} from "./store";
 
 
 function App() {
 
-    let [value, setValue] = useState<number>(0)
-    let [startValue, setStartValue] = useState<number>(JSON.parse(localStorage.getItem("startValue") || "0"))
-    let [maxValue, setMaxValue] = useState<number>(5)
-    let [buttonIncStatusDisabled, setbuttonIncStatusDisabled] = useState<boolean>(value === maxValue)
-    let [buttonSetStatusDisabled, setbuttonSetStatusDisabled] = useState<boolean>(true)
-    let [valueDisplay, setValueDisplay] = useState<number | string>(value)
-
-
-    useEffect(()=>{
-        localStorage.setItem("startValue", JSON.stringify(startValue) )
-    }, [startValue])
+    const state = useSelector<AppRootStateType, StateType>(state => state)
+    const dispatch = useDispatch()
 
     const increaseValue = () => {
-        value < maxValue && setValue(value + 1)
+        dispatch(increaseValueAC())
     }
     const resetValue = () => {
-         setValue(startValue)
+        dispatch(resetValueAC())
     }
-    const getNewMaxValue = (newMaxValue:number) => {
-        setMaxValue(newMaxValue)
-        setValueDisplay( newMaxValue < 0 ? "Incorrect value!" : "enter values and press 'set'")
-        setbuttonSetStatusDisabled(newMaxValue< 0)
+    const getNewMaxValue = (newMaxValue: number) => {
+        dispatch(getNewMaxValueAC(newMaxValue))
     }
-    const getNewStartValue = (newStartValue:number) => {
-        setStartValue(newStartValue)
-        setValueDisplay( newStartValue < 0 ? "Incorrect value!" : "enter values and press 'set'")
-        setbuttonSetStatusDisabled(newStartValue < 0)
+    const getNewStartValue = (newStartValue: number) => {
+        dispatch(getNewStartValueAC(newStartValue))
     }
     const setNewStartValueInValue = () => {
-        setValue(startValue)
-        setbuttonSetStatusDisabled(true)
+        dispatch(setNewStartValueInValueAC())
     }
-
-    useEffect(()=>{
-        setValueDisplay(value)
-        setbuttonIncStatusDisabled(value === maxValue)
-    }, [value])
-
 
     return (
         <div className="App">
             <div className="counter">
                 <div className="tablo">
                     <InputField inputName={"max value:"}
-                                value={maxValue} onChange={getNewMaxValue}/>
+                                value={state.maxValue} onChange={getNewMaxValue}/>
                     <InputField inputName={"start value:"}
-                                value={startValue} onChange={getNewStartValue}/>
+                                value={state.startValue} onChange={getNewStartValue}/>
                 </div>
                 <div className="setButtons">
-                    <Button onClick={setNewStartValueInValue} nameButton={"set"} disabled={buttonSetStatusDisabled}/>
+                    <Button onClick={setNewStartValueInValue} nameButton={"set"}
+                            disabled={state.buttonSetStatusDisabled}/>
                 </div>
             </div>
             <div className="counter">
-                <div className={valueDisplay === "Incorrect value!" || valueDisplay === maxValue ? "error" : "tablo"}>{valueDisplay}</div>
+                <div className={state.valueDisplay === "Incorrect value!" || state.valueDisplay === state.maxValue
+                    ? "error" : "tablo"}>{state.valueDisplay}</div>
                 <div className="setButtons">
-                    <Button onClick={increaseValue} nameButton={"inc"} disabled={buttonIncStatusDisabled}/>
+                    <Button onClick={increaseValue} nameButton={"inc"} disabled={state.buttonIncStatusDisabled}/>
                     <Button onClick={resetValue} nameButton={"reset"} disabled={false}/>
                 </div>
-            </div>
 
+
+            </div>
         </div>
     );
 }
