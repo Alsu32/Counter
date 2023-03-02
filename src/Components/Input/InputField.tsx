@@ -1,11 +1,7 @@
 import React from 'react';
 import {Input} from "./Input";
 
-type InputFieldPropsType = {
-    inputName: string
-    value:number
-    onChange:(value:number)=>void
-}
+
 export const InputField: React.FC<InputFieldPropsType> = ({inputName, value, onChange}) => {
 
     return (
@@ -14,4 +10,11 @@ export const InputField: React.FC<InputFieldPropsType> = ({inputName, value, onC
             <Input onChange={onChange} value={value}/>
         </div>
     );
+}
+
+//types
+type InputFieldPropsType = {
+    inputName: string
+    value:number
+    onChange:(value:number)=>void
 }
