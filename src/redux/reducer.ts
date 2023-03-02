@@ -7,7 +7,7 @@ const initialState = {
     valueDisplay: 0 as number | string
 }
 //reducer
-export const Reducer = (state:InitialStateType = initialState, action: MainActionType): InitialStateType => {
+export const Reducer = (state: InitialStateType = initialState, action: MainActionType): InitialStateType => {
     switch (action.type) {
         case 'INCREASE_VALUE':
             if (state.value < state.maxValue) {
@@ -19,13 +19,26 @@ export const Reducer = (state:InitialStateType = initialState, action: MainActio
         case 'RESET_VALUE':
             return {...state, valueDisplay: state.startValue, value: state.startValue}
         case 'GET_NEW_MAX_VALUE':
-            return {...state, maxValue: action.newMaxValue, buttonSetStatusDisabled: false,
-                valueDisplay: action.newMaxValue < 0 || state.startValue < 0 ? "Incorrect value!" : "enter values and press 'set'"
-            }
+
+            return action.newMaxValue < 0 || state.startValue < 0
+                ? {
+                    ...state, maxValue: action.newMaxValue, buttonSetStatusDisabled: true,
+                    valueDisplay: "Incorrect value!"
+                }
+                : {
+                    ...state, maxValue: action.newMaxValue, buttonSetStatusDisabled: false,
+                    valueDisplay: "enter values and press 'set'"
+                }
         case 'GET_NEW_START_VALUE':
-            return {...state, startValue: action.newStartValue, buttonSetStatusDisabled: false,
-                valueDisplay: action.newStartValue < 0 || state.maxValue < 0 ? "Incorrect value!" : "enter values and press 'set'"
-            }
+            return action.newStartValue < 0 || state.maxValue < 0
+                ? {
+                    ...state, startValue: action.newStartValue, buttonSetStatusDisabled: true,
+                    valueDisplay: "Incorrect value!"
+                }
+                : {
+                    ...state, startValue: action.newStartValue, buttonSetStatusDisabled: false,
+                    valueDisplay: "enter values and press 'set'"
+                }
         case 'SET_NEW_START_VALUE_IN_VALUE':
             return {...state, valueDisplay: state.startValue, value: state.startValue, buttonSetStatusDisabled: true}
         default:
@@ -35,7 +48,10 @@ export const Reducer = (state:InitialStateType = initialState, action: MainActio
 // actions
 export const increaseValueAC = () => ({type: 'INCREASE_VALUE'}) as const
 export const resetValueAC = () => ({type: 'RESET_VALUE'}) as const
-export const getNewMaxValueAC = (newMaxValue: number) => ({type: 'GET_NEW_MAX_VALUE', newMaxValue: newMaxValue}) as const
+export const getNewMaxValueAC = (newMaxValue: number) => ({
+    type: 'GET_NEW_MAX_VALUE',
+    newMaxValue: newMaxValue
+}) as const
 export const getNewStartValueAC = (newStartValue: number) =>
     ({type: 'GET_NEW_START_VALUE', newStartValue: newStartValue}) as const
 export const setNewStartValueInValueAC = () => ({type: 'SET_NEW_START_VALUE_IN_VALUE'}) as const

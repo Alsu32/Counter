@@ -18,11 +18,14 @@ function App() {
     const state = useSelector<AppRootStateType, InitialStateType>(state => state)
     const dispatch = useDispatch()
 
-    const increaseValue = () => {dispatch(increaseValueAC())}
-    const resetValue = () => {dispatch(resetValueAC())}
+    const isNewValueNegative = state.maxValue < 0 || state.startValue < 0
+
+    const increaseValue = () => {return isNewValueNegative ? "" : dispatch(increaseValueAC())}
+    const resetValue = () => {return isNewValueNegative ? "" : dispatch(resetValueAC())}
     const getNewMaxValue = (newMaxValue: number) => {dispatch(getNewMaxValueAC(newMaxValue))}
     const getNewStartValue = (newStartValue: number) => {dispatch(getNewStartValueAC(newStartValue))}
-    const setNewStartValueInValue = () => {dispatch(setNewStartValueInValueAC())}
+    const setNewStartValueInValue = () => {return isNewValueNegative ? "" : dispatch(setNewStartValueInValueAC())}
+
 
     return (
         <div className="App">
@@ -46,9 +49,9 @@ function App() {
                     ? "error" : "tablo"}>{state.valueDisplay}</div>
                 <div className="setButtons">
                     <Button onClick={increaseValue} nameButton={"inc"}
-                            disabled={state.value === state.maxValue || !state.buttonSetStatusDisabled}/>
+                            disabled={state.value === state.maxValue || !state.buttonSetStatusDisabled || isNewValueNegative}/>
                     <Button onClick={resetValue} nameButton={"reset"}
-                            disabled={state.value === state.startValue || !state.buttonSetStatusDisabled}/>
+                            disabled={state.value === state.startValue || !state.buttonSetStatusDisabled || isNewValueNegative}/>
                 </div>
             </div>
         </div>
